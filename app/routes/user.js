@@ -81,7 +81,7 @@ router.post('/refresh-token', (req, res) => {
 
     if (!refreshToken) {
         res.status(401);
-        return  res.json({
+        return res.json({
             auth: false,
             msg: 'Refresh token is not supplied'
         });
@@ -96,7 +96,7 @@ router.post('/refresh-token', (req, res) => {
         } else {
             const userId = decoded.id;
             const token = jwt.sign({ id: userId }, config.secret, { expiresIn: expiresIn });
-            res.json({ auth: true, token: token });
+            res.status(200).json({ auth: true, token: token });
         }
     });
 });
@@ -104,7 +104,7 @@ router.post('/refresh-token', (req, res) => {
 router.get('/userdata', middleware.checkToken, (req, res) => {
     const userId = req.decoded.id;
 
-    User.findById(userId, function (err, user) {
+    User.findById(userId, (err, user) => {
         if (err) {
             res.status(500);
             res.json({ auth: false, msg: 'Server Error' });
